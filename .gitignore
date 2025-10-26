@@ -60,3 +60,14 @@ target/
 .cache/
 temp/
 tmp/
+
+.idea/
+
+*.iml
+*.name
+
+
+# IDE Directories (Generated)
+.idea/      # JetBrains IDEs (IntelliJ, PyCharm, WebStorm, etc.)
+.vs/        # Visual Studio
+# ...
