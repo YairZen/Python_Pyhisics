@@ -22,6 +22,7 @@ D = A + B
 max_no = 5
 
 ##########
+
 #output
 if qn==1:
     print(f'{C:.5g}')
