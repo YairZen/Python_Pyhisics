@@ -20,6 +20,7 @@ D = A + B
 # plt.show()
 
 max_no = 5
+
 ##########
 #output
 if qn==1:
