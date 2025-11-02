@@ -59,4 +59,6 @@ if qn==3:
 if qn==4:
     print(f'{T3_numeric:.5g}')
 if qn==5:
-    print(f'{T3_analytic:.5g}')
+    print(f
+
+    {T3_analytic:.5g}')
