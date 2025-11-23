@@ -18,44 +18,54 @@ v0=10
 alpha=15*np.pi/180
 
 ## your code and answers
+## your code and answers
 
 dt = 1e-4
 Tmax = 1.1
 
+def trunc_5sf(x, n=5):
+    # truncate to n significant figures (not round)
+    if x == 0 or not np.isfinite(x):
+        return x
+    sign = 1.0
+    if x < 0:
+        sign = -1.0
+        x = -x
+    e = np.floor(np.log10(x))
+    m = x / (10.0**e)
+    s = np.floor(m * (10.0**(n-1)) + 1e-12)
+    return sign * s * (10.0**(e-(n-1)))
+
 def calc_range(c_val):
     N = int(Tmax/dt) + 1
-    x = np.zeros(N)
-    y = np.zeros(N)
-    vx = np.zeros(N)
-    vy = np.zeros(N)
+    x = 0.0
+    y = 0.0
+    vx = v0 * np.cos(alpha)
+    vy = v0 * np.sin(alpha)
+    best_x = 0.0
 
-    vx[0] = v0 * np.cos(alpha)
-    vy[0] = v0 * np.sin(alpha)
+    for _ in range(N-1):
+        v = np.hypot(vx, vy)
+        drag = (b + c_val * v) / m
+        ax = -drag * vx
+        ay = -g - drag * vy
 
-    for i in range(N-1):
-        v = np.hypot(vx[i], vy[i])
-        drag_coeff = (b + c_val * v) / m
-        ax = -drag_coeff * vx[i]
-        ay = -g - drag_coeff * vy[i]
-        vx[i+1] = vx[i] + ax * dt
-        vy[i+1] = vy[i] + ay * dt
-        x[i+1] = x[i] + vx[i] * dt
-        y[i+1] = y[i] + vy[i] * dt
+        new_vx = vx + ax * dt
+        new_vy = vy + ay * dt
+        new_x = x + vx * dt
+        new_y = y + vy * dt
 
-    zc = zero_cross(y)
-    if len(zc) >= 2:
-        j = zc[1]
-        x1, x2 = x[j], x[j+1]
-        y1, y2 = y[j], y[j+1]
-        if y1 == y2:
-            return x1
-        frac = y1 / (y1 - y2)      # לינארית ל-y=0
-        return x1 + frac * (x2 - x1)
-    else:
-        return x[-1]
+        if new_y >= 0:
+            best_x = new_x
+        else:
+            break
 
-ANS1 = calc_range(0.0)   # סעיף 1: c=0
-ANS2 = calc_range(c)     # סעיף 2: c מהקלט
+        vx, vy, x, y = new_vx, new_vy, new_x, new_y
+
+    return best_x
+
+ANS1 = trunc_5sf(calc_range(0.0))  # סעיף 1: בלי גרר kv^2
+ANS2 = trunc_5sf(calc_range(c))    # סעיף 2: עם c מהקלט
 
 
 #ouput
